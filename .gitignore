@@ -8,6 +8,19 @@ obj/
 # VS Code
 .vscode/
 
+# Rider
+.idea/
+
 # User-specific files
 *.user
 *.suo
+
+# ASP.NET Core secrets
+appsettings.Development.json
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
