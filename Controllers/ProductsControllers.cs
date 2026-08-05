@@ -1,0 +1,88 @@
+using DevOpsLab.Dtos;
+using DevOpsLab.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DevOpsLab.Controllers;
+
+[ApiController]
+[Route("api/products")]
+public class ProductsController : ControllerBase
+{
+    private readonly IProductService _productService;
+
+    public ProductsController(IProductService productService)
+    {
+        _productService = productService;
+    }
+
+    // GET: api/products
+    [HttpGet]
+public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(
+    string? name,
+    decimal? minPrice,
+    decimal? maxPrice,
+    int page = 1,
+    int pageSize = 10)
+{
+    var products = await _productService.GetAllAsync(
+        name,
+        minPrice,
+        maxPrice,
+        page,
+        pageSize);
+
+    return Ok(products);
+}
+
+    // GET: api/products/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductDto>> GetProduct(int id)
+    {
+    var product = await _productService.GetByIdAsync(id);
+
+        if (product == null)
+        return NotFound();
+
+    return Ok(product);
+    }
+
+    // POST: api/products
+    [HttpPost]
+    public async Task<ActionResult<ProductDto>> CreateProduct(
+    CreateProductDto dto)
+    {
+    var product = await _productService.CreateAsync(dto);
+
+    return CreatedAtAction(
+        nameof(GetProduct),
+        new { id = product.Id },
+        product
+    );
+    }
+
+    // PUT: api/products/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProduct(
+    int id,
+    UpdateProductDto dto)
+    {
+    var updated = await _productService.UpdateAsync(id, dto);
+
+        if (!updated)
+            return NotFound();
+
+    return NoContent();
+    }
+
+    // DELETE: api/products/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+    var deleted = await _productService.DeleteAsync(id);
+
+    if (!deleted)
+        return NotFound();
+
+    return NoContent();
+    }
+}

@@ -1,0 +1,18 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: devopslab-sqlserver
+    restart: unless-stopped
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "REMOVED_SECRET"
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+volumes:
+  sqlserver_data:
